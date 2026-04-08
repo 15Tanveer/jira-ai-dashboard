@@ -1,0 +1,36 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+  extensions = [pgvector(map: "vector")]
+}
+
+model JiraIssue {
+  id             String   @id
+  projectKey     String
+  summary        String
+  description    String?
+  issueType      String
+  status         String
+  priority       String
+  assignee       String?
+  reporter       String?
+  createdAt      DateTime
+  updatedAt      DateTime?
+  resolvedAt     DateTime?
+  timeEstimate   Int?
+  timeSpent      Int?
+  rawJson        Json
+  semanticText   String
+  embedding      Unsupported("vector")?
+  createdTs      DateTime @default(now())
+
+  @@index([projectKey])
+  @@index([assignee])
+  @@index([status])
+  @@index([priority])
+  @@index([issueType])
+}
